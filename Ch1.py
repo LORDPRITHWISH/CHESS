@@ -106,6 +106,7 @@ def press(x,y):
                     elif v=="." :
                         b[i[0]][i[1]].config(bg="red")
                         
+                    
                         
             b[x][y].config(bg=SC)
             SLPO=(x,y)
