@@ -1,4 +1,3 @@
-# from ast import If
 from operator import mod
 import tkinter as tk
 from movement import posible
@@ -45,6 +44,7 @@ WW="#f0b1dd"
 BB="#730024"
 SELECTED=False
 SLPO=(0,0)
+POSLI=[]
 
 f=tk.Frame(W,background="blue",border=5)
 f.pack(side="top",pady=15,padx=15,fill="x")
@@ -61,7 +61,7 @@ for i in range(0,7):
 setpi(loc)
 
 def press(x,y):
-    global SELECTED,SLPO
+    global SELECTED,SLPO,POSLI
     
     def move(s,f,v):
         s.config(text="")
@@ -72,8 +72,7 @@ def press(x,y):
         f.config(text=f"{MARK.get(abs(v))}",fg=col)
         print(v)
     print(x,y)
-    if SELECTED :
-        clo="red"
+    if SELECTED :        
         opx=SLPO[0];opy=SLPO[1]
         if opx==((opx//2)*2):
             if opy==((opy//2)*2):
@@ -86,10 +85,34 @@ def press(x,y):
             else:
                 clo=WH
         b[opx][opy].config(bg=clo)
-        if ((loc[opx][opy]<0 and loc[x][y]<0) or (loc[opx][opy]>0 and loc[x][y]>0)):
+        if ((loc[opx][opy]<0 and loc[x][y]<0) or (loc[opx][opy]>0 and loc[x][y]>0)) :  #-----------------------------------------------
+            def mark(li,v):
+                for i in li :
+                    if loc[i[0]][i[1]]==0:
+                        b[i[0]][i[1]].config(text=v)
+                    elif v=="":
+                        opx=SLPO[0];opy=SLPO[1]
+                        if opx==((opx//2)*2):
+                            if opy==((opy//2)*2):
+                                clo=WH
+                            else:
+                                clo=BL
+                        else:
+                            if opy==((opy//2)*2):
+                                clo=BL
+                            else:
+                                clo=WH
+                        b[i[0]][i[1]].config(bg=clo)
+                    elif v=="." :
+                        b[i[0]][i[1]].config(bg="red")
+                        
+                        
             b[x][y].config(bg=SC)
             SLPO=(x,y)
             print(445879)
+            mark(POSLI,"")
+            POSLI=posible(opx,opy,loc)
+            mark(POSLI,".")
         else :
             # if loc[x][y]!=0 :
             #     OUTW.append(loc[x][y])
