@@ -70,61 +70,75 @@ def press(x,y):
         else :
             col=WW
         f.config(text=f"{MARK.get(abs(v))}",fg=col)
-        print(v)
-    print(x,y)
-    if SELECTED :        
-        opx=SLPO[0];opy=SLPO[1]
-        if opx==((opx//2)*2):
-            if opy==((opy//2)*2):
+        
+        
+    def mark(li,v):
+        for i in li :
+            if loc[i[0]][i[1]]==0:
+                b[i[0]][i[1]].config(text=v)
+            elif v=="":
+                opx=i[0];opy=i[1]
+                if opx==((opx//2)*2):
+                    if opy==((opy//2)*2):
+                        clo=WH
+                    else:
+                        clo=BL
+                else:
+                    if opy==((opy//2)*2):
+                        clo=BL
+                    else:
+                        clo=WH
+                b[i[0]][i[1]].config(bg=clo)
+            elif v=="." :
+                b[i[0]][i[1]].config(bg="red")
+    
+    
+    def unsel(x,y):
+        if x==((x//2)*2):
+            if y==((y//2)*2):
                 clo=WH
             else:
                 clo=BL
         else:
-            if opy==((opy//2)*2):
+            if y==((y//2)*2):
                 clo=BL
             else:
                 clo=WH
-        b[opx][opy].config(bg=clo)
-        if ((loc[opx][opy]<0 and loc[x][y]<0) or (loc[opx][opy]>0 and loc[x][y]>0)) :  #-----------------------------------------------
-            def mark(li,v):
-                for i in li :
-                    if loc[i[0]][i[1]]==0:
-                        b[i[0]][i[1]].config(text=v)
-                    elif v=="":
-                        opx=SLPO[0];opy=SLPO[1]
-                        if opx==((opx//2)*2):
-                            if opy==((opy//2)*2):
-                                clo=WH
-                            else:
-                                clo=BL
-                        else:
-                            if opy==((opy//2)*2):
-                                clo=BL
-                            else:
-                                clo=WH
-                        b[i[0]][i[1]].config(bg=clo)
-                    elif v=="." :
-                        b[i[0]][i[1]].config(bg="red")
-                        
-                    
-                        
+        b[x][y].config(bg=clo)            
+            
+    if SELECTED :        
+        opx=SLPO[0];opy=SLPO[1]
+        unsel(opx,opy)
+        
+        if ((loc[opx][opy]<0 and loc[x][y]<0) or (loc[opx][opy]>0 and loc[x][y]>0)) :
+        # if (abs(loc[opx][opy])==loc[opx][opy])==(abs(loc[x][y])==loc[x][y]) :    #---------------------------------
             b[x][y].config(bg=SC)
             SLPO=(x,y)
-            print(445879)
             mark(POSLI,"")
-            POSLI=posible(opx,opy,loc)
+            POSLI=posible(x,y,loc)
             mark(POSLI,".")
-        else :
-            # if loc[x][y]!=0 :
-            #     OUTW.append(loc[x][y])
-            # loc[x][y]=loc[opx][opy]
-            # loc[opx][opy]=0
+            print(POSLI)
             
-            posible(opx,opy,loc)
-            move(b[opx][opy],b[x][y],loc[x][y])
+        else :
             print(999)
+            for i in POSLI :
+                if i==(x,y):
+                    print(2222)
+                    loc[x][y]=loc[opx][opy]
+                    loc[opx][opy]=0
+                    move(b[opx][opy],b[x][y],loc[x][y])
+                    SELECTED=False
+                    
+                    OUTW.append(loc[x][y])
+                    break
+            else :
+                SELECTED = False
+                mark(POSLI,"")
+            # posible(opx,opy,loc)
     else:
         b[x][y].config(bg=SC)
+        POSLI=posible(x,y,loc)
+        mark(POSLI,".")
         SLPO=(x,y)
         SELECTED=True
     
