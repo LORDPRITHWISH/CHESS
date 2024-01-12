@@ -1,11 +1,12 @@
 from operator import mod
 import tkinter as tk
+from brains import move
 from movement import posible
 
 MARK={20:'K',9:'Q',5:'r',4:'b',3:'h',1:'p'}
 OUTW=[]
 OUTB=[]
-
+PLA=-1
 def setpi(x):
     for i in range(0,8):
         if i==0 :
@@ -42,6 +43,9 @@ SC="#00ff2f"
 SF="#ffcc00"
 WW="#f0b1dd"
 BB="#730024"
+bc=WH
+ff="black"
+
 SELECTED=False
 SLPO=(0,0)
 POSLI=[]
@@ -56,21 +60,28 @@ for i in range(0,7):
     loc.append([0]*8)
     
  
- 
+def shift(s,f,v):
+    s.config(text="")
+    if v>0 :
+        col=BB
+    else :
+        col=WW
+    f.config(text=f"{MARK.get(abs(v))}",fg=col)
     
-setpi(loc)
+
+def aigiv():
+    global PLA
+    # a = ((0, 0), (0, 0))
+    a=move(PLA,loc)
+    loc[a[1][0]][a[1][1]]=loc[a[0][0]][a[0][1]]
+    loc[a[0][0]][a[0][1]]=0
+    shift(b[a[0][0]][a[0][1]],b[a[1][0]][a[1][1]],loc[a[1][0]][a[1][1]])
+    PLA=-PLA
+    print(a,'\n'*3)
+    print(*loc,sep='\n')
 
 def press(x,y):
-    global SELECTED,SLPO,POSLI
-    
-    def move(s,f,v):
-        s.config(text="")
-        if v>0 :
-            col=BB
-        else :
-            col=WW
-        f.config(text=f"{MARK.get(abs(v))}",fg=col)
-        
+    global SELECTED,SLPO,POSLI,PLA        
         
     def mark(li,v):
         for i in li :
@@ -111,7 +122,6 @@ def press(x,y):
         unsel(opx,opy)
         
         if ((loc[opx][opy]<0 and loc[x][y]<0) or (loc[opx][opy]>0 and loc[x][y]>0)) :
-        # if (abs(loc[opx][opy])==loc[opx][opy])==(abs(loc[x][y])==loc[x][y]) :    #---------------------------------
             b[x][y].config(bg=SC)
             SLPO=(x,y)
             mark(POSLI,"")
@@ -123,58 +133,65 @@ def press(x,y):
             print(999)
             for i in POSLI :
                 if i==(x,y):
-                    print(2222)
                     loc[x][y]=loc[opx][opy]
                     loc[opx][opy]=0
-                    move(b[opx][opy],b[x][y],loc[x][y])
+                    shift(b[opx][opy],b[x][y],loc[x][y])
                     SELECTED=False
-                    
+                    PLA=-PLA
+                    mark(POSLI,"")
                     OUTW.append(loc[x][y])
+                    
+                    aigiv()
                     break
             else :
                 SELECTED = False
                 mark(POSLI,"")
-            # posible(opx,opy,loc)
-    else:
+    elif (PLA<0 and loc[x][y]>0) or (PLA>0 and loc[x][y]<0) or loc[x][y]==0:
+        return
+    else :
         b[x][y].config(bg=SC)
         POSLI=posible(x,y,loc)
         mark(POSLI,".")
         SLPO=(x,y)
         SELECTED=True
-    
-bc=WH
-ff="black"
-for i in range(8):
-    for j in range(8):
-        if i==((i//2)*2):
-            if j==((j//2)*2):
-                bc=WH
-                ac=BL
+
+
+def start():
+    for i in range(8):
+        for j in range(8):
+            if i==((i//2)*2):
+                if j==((j//2)*2):
+                    bc=WH
+                    ac=BL
+                else:
+                    bc=BL
+                    ac=WH
             else:
-                bc=BL
-                ac=WH
-        else:
-            if j==((j//2)*2):
-                bc=BL
-                ac=WH
-            else:
-                ac=BL
-                bc=WH
-        if loc[i][j] == 0 :
-            txt=''
-        else :
-            txt=MARK.get(abs(loc[i][j]))
-            if loc[i][j] > 0 :
-                ff=BB
+                if j==((j//2)*2):
+                    bc=BL
+                    ac=WH
+                else:
+                    ac=BL
+                    bc=WH
+            if loc[i][j] == 0 :
+                txt=''
             else :
-                ff=WW
-        
-        b[i][j] = tk.Button(f, text=f"{txt}",font=('Arial Black',35,'bold'), width=4, height=1,relief="raised",activebackground=ac,bg=bc,fg=ff,command= lambda r=i, c=j: press(r,c))
-        b[i][j].grid(row=i,column=j)
+                txt=MARK.get(abs(loc[i][j]))
+                if loc[i][j] > 0 :
+                    ff=BB
+                else :
+                    ff=WW
+            
+            b[i][j] = tk.Button(f, text=f"{txt}",font=('Arial Black',35,'bold'), width=4, height=1,relief="raised",activebackground=ac,bg=bc,fg=ff,command= lambda r=i, c=j: press(r,c))
+            b[i][j].grid(row=i,column=j)
 
 
 
-qwe = tk.Button(f, text="kkl",font=('Arial Black',35,'bold'), width=4, height=1,relief="raised",)
-qwe.config(text="")
+    qwe = tk.Button(f, text="kkl",font=('Arial Black',35,'bold'), width=4, height=1,relief="raised",)
+    qwe.config(text="")
 
-tk.mainloop()
+    tk.mainloop()
+    
+    
+setpi(loc)    
+start()

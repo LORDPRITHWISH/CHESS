@@ -109,12 +109,29 @@ def posible(x,y,t):
         digo(x,y)
         hogo(x,y)
     elif abs(v)==5:
-        digo(x,y)
+        hogo(x,y)
     elif abs(v)==4:
         digo(x,y)
     elif abs(v)==3:
         hor(x,y)
     return out
+    
+def poss(o,t):
+    out=[]
+    if o<0 :
+        for i in range(0,8) :
+            for j in range(0,8) :
+                if t[i][j]<0 :
+                    out.append((i,j))
+    elif o>0 :
+        for i in range(0,8) :
+            for j in range(0,8) :
+                if t[i][j]>0 :
+                    out.append((i,j))
+    return out
+    
+    
+    
     
     
 ta=[[ 5,  4,  3,  20,  9, -3,  4,  5],
