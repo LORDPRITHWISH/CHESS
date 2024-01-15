@@ -2,8 +2,10 @@ from operator import mod
 import tkinter as tk
 from brains import move
 from movement import posible
+from oldbr import oldmove
+import time
 
-MARK={200:'K',9:'Q',5:'r',4:'b',3:'h',1:'p',0:''}
+MARK={20:'K',9:'Q',5:'r',4:'b',3:'h',1:'p',0:''}
 OUTW=[]
 OUTB=[]
 PLA=-1
@@ -25,9 +27,9 @@ def setpi(x):
         elif i==6 :
             for j in range(0,8):
                 x[i][j]=-1
-    x[0][3]=200
+    x[0][3]=20
     x[0][4]=9
-    x[7][3]=-200
+    x[7][3]=-20
     x[7][4]=-9
     
 
@@ -82,15 +84,30 @@ def shift(s,f,v):
     f.config(text=f"{MARK.get(abs(v))}",fg=col)
     
 
-def aigiv():
+
+
+
+
+def aigiv():  #------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     global PLA
+    at1=time.time()
     a=move(PLA,loc)
+    at2=time.time()
+    oldmove(PLA,loc)
+    bt1=time.time()
+    print(f'\n\n{at2-at1}\n{bt1-at2}')
     loc[a[1][0]][a[1][1]]=loc[a[0][0]][a[0][1]]
     loc[a[0][0]][a[0][1]]=0
     shift(b[a[0][0]][a[0][1]],b[a[1][0]][a[1][1]],loc[a[1][0]][a[1][1]])
     PLA=-PLA
-    print(a,'\n')
-    # print(*loc,sep='\n')
+
+
+
+
+
+
+
+
 
 def press(x,y):
     global SELECTED,SLPO,POSLI,PLA        
@@ -130,10 +147,8 @@ def press(x,y):
             mark(POSLI,"")
             POSLI=posible(x,y,loc)
             mark(POSLI,".")
-            print(POSLI)
             
         else :
-            print(999)
             for i in POSLI :
                 if i==(x,y):
                     loc[x][y]=loc[opx][opy]
@@ -160,7 +175,6 @@ def press(x,y):
 
 
 def start():
-    ff="black"
     for i in range(8):
         for j in range(8):
             col=colourdecider(i,j)

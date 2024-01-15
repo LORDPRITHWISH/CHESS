@@ -2,6 +2,8 @@ from typing import Tuple
 from movement import posible, poss
 
 COU=0
+# LEV=2
+
 
 def shift(initial,final,board_arry,ini=0) :
     fival=board_arry[final[0]][final[1]]
@@ -9,50 +11,111 @@ def shift(initial,final,board_arry,ini=0) :
     board_arry[initial[0]][initial[1]]=ini
     return fival
 
-def calculate(pl,bor,score,myside,level) :
+def sel(a,b,v) :
+    v=abs(v)
+    if a==b :
+        return v
+    else :
+        return -v
+
+def last(tamp,pl,myside,value,score):
+    if tamp :
+        # return score
+        if pl == myside:
+            if value>score :
+                return value
+        else :
+            if value<score :
+                return value
+    return score
+
+
+
+
+def recal(pl,bor,score,myside,level,tamp,value) :
     global COU
-    
     if level==0 :
-        return (score,(0, 0), (0, 0))
+        return last(tamp,pl,myside,value,score)
     sol=poss(pl,bor)
-    scli=[]
-    # print(sol,'\n'*4)
+    ret=0
+    fst=False;rv=0
+    
     for i in sol :
         mov=posible(i[0],i[1],bor)
-        # print(i,mov)
         for j in mov :
             val=shift(i,j,bor)
-            # print(val)
-            if val !=0 :
-                # print(val,'\t\txxxxx','\n')
-                if pl == myside:
-                    score += abs(val)
-                else :
-                    score -= abs(val)
-                # print(score,val,i)
-            scli.append((calculate(-pl,bor,score,myside,level-1)[0],i,j))
-            
-            # print(*bor,'\n',sep='\n')
+            if val != 0 :
+                score += sel(pl,myside,val)
+            ret = recal(-pl,bor,score,myside,level-1,fst,rv)
             COU+=1
             shift(j,i,bor,val)
-    # if level == 2:
-    #     print(scli)
-    if pl == myside:
-        return max(scli)
-    else :
-        return min(scli)
-    
+            if tamp :
+                # print(99)
+                if pl == myside:
+                    if ret>value :
+                        # print('>')
+                        return value
+                else :
+                    if ret<value :
+                        # print('<')
+                        return value
             
+            # print(fst)
+            if fst :
+                if pl == myside:
+                    if ret>rv :
+                        rv=ret
+                else :
+                    if ret<rv :
+                        rv=ret
+            else :
+                fst=True
+                rv=ret
+    return rv
+                
+
+
+
+
+
+
+def calculate(pl,bor,score,myside,level) -> Tuple[int,Tuple[int,int],Tuple[int,int]] :
+    global COU
+    sol=poss(pl,bor)
+    ret=0
+    fst=False;rv=(0,(0,0),(0,0))
+    
+    for i in sol :
+        mov=posible(i[0],i[1],bor)
+        for j in mov :
+            val=shift(i,j,bor)
+            if val != 0 :
+                score += sel(pl,myside,val)
+            ret = recal(-pl,bor,score,myside,level-1,fst,rv[0])
+            COU+=1
+            shift(j,i,bor,val)            
+           
+            # print(fst)
+
+            if fst :
+                if pl == myside:
+                    if ret>rv[0] :
+                        rv=(ret,i,j)
+                else :
+                    if ret<rv[0] :
+                        rv=(ret,i,j)
+            else :
+                fst=True
+                rv=(ret,i,j)
+    return rv
             
             
     
 
-# def move(pl,bor):
-def move(pl,bor) -> Tuple[Tuple[int,int],Tuple[int,int]]:
-    layers=2
+def move(pl,bor,lev=5) -> Tuple[Tuple[int,int],Tuple[int,int]]:
     
-    ans=calculate(pl,bor,0,pl,layers)
-    print('\n',COU)
+    ans=calculate(pl,bor,0,pl,lev)
+    print('\n  new\n',COU,'\t',ans[0],'\n',ans[1],ans[2])
     return (ans[1],ans[2])
     
     
@@ -64,14 +127,13 @@ def move(pl,bor) -> Tuple[Tuple[int,int],Tuple[int,int]]:
     
     
 
-ta=[[ 5,  4,  3,  20,  9,  3,  4,  5],
-    [ 1,  1,  1,   1,  1,  1,  1,  1], 
-    [ 0,  0,  0,   0,  0,  0, -1,  0], 
-    [ 0,  0,  0,   0,  0,  0,  0,  0], 
-    [ 0,  0,  0,   0,  0,  0,  0,  0], 
-    [ 0,  0,  0,   0,  0,  0,  0,  0], 
-    [-1, -1, -1,  -1, -1, -1, -1, -1], 
-    [-5, -4, -3, -20, -9, -3, -4, -1]]    
+# ta=[[ 5,  4,  3,  20,  9,  3,  4,  5],
+#      [ 1,  1,  1,   1,  1,  1,  1,  1], 
+#      [ 0,  0,  0,   0,  0,  0,  0,  0], 
+#      [ 0,  0,  0,   0,  0,  0,  0,  0], 
+#      [ 0,  0,  0,   0,  0,  0,  0,  0], 
+#      [ 0,  0,  0,   0,  0,  0,  0,  0], 
+#      [-1, -1, -1,  -1, -1, -1, -1, -1], 
+#      [-5, -4, -3, -20, -9, -3, -4, -1]]   
 
-
-print(move(1,ta))
+# print(move(1,ta,3))
