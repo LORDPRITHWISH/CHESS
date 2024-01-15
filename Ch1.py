@@ -3,7 +3,7 @@ import tkinter as tk
 from brains import move
 from movement import posible
 
-MARK={20:'K',9:'Q',5:'r',4:'b',3:'h',1:'p',0:''}
+MARK={200:'K',9:'Q',5:'r',4:'b',3:'h',1:'p',0:''}
 OUTW=[]
 OUTB=[]
 PLA=-1
@@ -25,9 +25,9 @@ def setpi(x):
         elif i==6 :
             for j in range(0,8):
                 x[i][j]=-1
-    x[0][3]=20
+    x[0][3]=200
     x[0][4]=9
-    x[7][3]=-20
+    x[7][3]=-200
     x[7][4]=-9
     
 
@@ -180,7 +180,6 @@ def start():
     qwe.config(text="")
 
     tk.mainloop()
-    
     
 setpi(loc)    
 start()
