@@ -1,5 +1,6 @@
 from typing import Tuple
 from movement import posible, poss
+from numba import njit
 
 COU=0
 # LEV=2
@@ -79,21 +80,21 @@ def recal(pl,bor,score,myside,level,tamp,value) :
 
 
 
-def calculate(pl,bor,score,myside,level) -> Tuple[int,Tuple[int,int],Tuple[int,int]] :
+def calculate(pl,board,score,myside,level) -> Tuple[int,Tuple[int,int],Tuple[int,int]] :
     global COU
-    sol=poss(pl,bor)
+    sol=poss(pl,board)
     ret=0
     fst=False;rv=(0,(0,0),(0,0))
     
     for i in sol :
-        mov=posible(i[0],i[1],bor)
+        mov=posible(i[0],i[1],board)
         for j in mov :
-            val=shift(i,j,bor)
+            val=shift(i,j,board)
             if val != 0 :
                 score += sel(pl,myside,val)
-            ret = recal(-pl,bor,score,myside,level-1,fst,rv[0])
+            ret = recal(-pl,board,score,myside,level-1,fst,rv[0])
             COU+=1
-            shift(j,i,bor,val)            
+            shift(j,i,board,val)            
            
             # print(fst)
 
@@ -127,13 +128,13 @@ def move(pl,bor,lev=5) -> Tuple[Tuple[int,int],Tuple[int,int]]:
     
     
 
-# ta=[[ 5,  4,  3,  20,  9,  3,  4,  5],
-#      [ 1,  1,  1,   1,  1,  1,  1,  1], 
-#      [ 0,  0,  0,   0,  0,  0,  0,  0], 
-#      [ 0,  0,  0,   0,  0,  0,  0,  0], 
-#      [ 0,  0,  0,   0,  0,  0,  0,  0], 
-#      [ 0,  0,  0,   0,  0,  0,  0,  0], 
-#      [-1, -1, -1,  -1, -1, -1, -1, -1], 
-#      [-5, -4, -3, -20, -9, -3, -4, -1]]   
+ta=[[ 5,  4,  3,  20,  9,  3,  4,  5],
+     [ 1,  1,  1,   1,  1,  1,  1,  1], 
+     [ 0,  0,  0,   0,  0,  0,  0,  0], 
+     [ 0,  0,  0,   0,  0,  0,  0,  0], 
+     [ 0,  0,  0,   0,  0,  0,  0,  0], 
+     [ 0,  0,  0,   0,  0,  0,  0,  0], 
+     [-1, -1, -1,  -1, -1, -1, -1, -1], 
+     [-5, -4, -3, -20, -9, -3, -4, -1]]   
 
-# print(move(1,ta,3))
+print(move(1,ta,4))

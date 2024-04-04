@@ -1,14 +1,15 @@
-from operator import mod
 import tkinter as tk
 from brains import move
 from movement import posible
-from oldbr import oldmove
 import time
 
 MARK={20:'K',9:'Q',5:'r',4:'b',3:'h',1:'p',0:''}
 OUTW=[]
 OUTB=[]
 PLA=-1
+HARDNESS=4
+
+
 def setpi(x):
     for i in range(0,8):
         if i==0 :
@@ -55,7 +56,16 @@ POSLI=[]
 f=tk.Frame(W,background="blue",border=5)
 f.pack(side="top",pady=15,padx=15,fill="x")
 b=[[tk.Button(f)]*8]
-loc=[[0]*8]
+# loc=[[0]*8]
+
+loc=[[ 5,  4,  3,  20,  9,  3,  4,  5],
+     [ 1,  1,  1,   1,  1,  1,  1,  1], 
+     [ 0,  0,  0,   0,  0,  0,  0,  0], 
+     [ 0,  0,  0,   0,  0,  0,  0,  0], 
+     [ 0,  0,  0,   0,  0,  0,  0,  0], 
+     [ 0,  0,  0,   0,  0,  0,  0,  0], 
+     [-1, -1, -1,   -1, -1, -1, -1, -1], 
+     [-5, -4, -3, -20, -9, -3, -4, -5]]
 
 for i in range(0,7):
     b.append([tk.Button(f)]*8)
@@ -91,7 +101,7 @@ def shift(s,f,v):
 def aigiv():  #------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     global PLA
     at1=time.time()
-    a=move(PLA,loc,4)
+    a=move(PLA,loc,HARDNESS)
     at2=time.time()
     # oldmove(PLA,loc)
     # bt1=time.time()
@@ -196,5 +206,5 @@ def start():
 
     tk.mainloop()
     
-setpi(loc)    
+# setpi(loc)    
 start()
