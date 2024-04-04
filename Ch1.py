@@ -3,7 +3,7 @@ from brains import move
 from movement import posible
 import time
 
-MARK={20:'K',9:'Q',5:'r',4:'b',3:'h',1:'p',0:''}
+MARK={20:'♚',9:'♛',5:'♜',4:'♝',3:'♞',1:'♟',0:''}
 OUTW=[]
 OUTB=[]
 PLA=-1
@@ -36,7 +36,7 @@ def setpi(x):
 
 
 W = tk.Tk()
-W.geometry("1150x1000+0+0")
+W.geometry("950x700+0+0")
 W.title("LORDS CHESS PRO MAX")
 s=11
 W.resizable(False,False)
@@ -196,12 +196,12 @@ def start():
                 ff=WW            
             else :
                 ff=NSFG
-            b[i][j] = tk.Button(f, text=f"{txt}",font=('Arial Black',35,'bold'), width=4, height=1,relief="raised",activebackground=col[1],bg=col[0],fg=ff,command= lambda r=i, c=j: press(r,c))
+            b[i][j] = tk.Button(f, text=f"{txt}",font=('Arial Black',44,'bold'), width=2, height=1,relief="raised",activebackground=col[1],bg=col[0],fg=ff,command= lambda r=i, c=j: press(r,c))
             b[i][j].grid(row=i,column=j)
 
 
 
-    qwe = tk.Button(f, text="kkl",font=('Arial Black',35,'bold'), width=4, height=1,relief="raised",)
+    qwe = tk.Button(f, text="kkl",font=('Arial Black',44,'bold'), width=2, height=1,relief="raised",)
     qwe.config(text="")
 
     tk.mainloop()
